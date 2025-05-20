@@ -1,33 +1,22 @@
+// Fichier : routes/client.js
 const express = require('express');
 const router = express.Router();
-const authenticateToken = require('../middleware/AuthMiddleware');
-const authorizeRoles = require('../middleware/AuthorizeMiddleware');
-
-// Contrôleur pour les fonctionnalités client
 const clientController = require('../controllers/clientController');
+const AuthController = require('../controllers/AuthController');
 
-// Toutes les routes ci-dessous sont protégées par authentification et rôle "client"
-router.use(authenticateToken, authorizeRoles('client'));
+const { authenticate, authorizeRole } = require('../middleware/AuthMiddleware');
 
-// 🔒 Voir son profil
-router.get('/profil', clientController.getProfile);
+router.use(authenticate, authorizeRole('client'));
 
-// 🔒 Mettre à jour son profil
-router.put('/profil/update', clientController.updateProfile);
 
-// 🔒 Changer le mot de passe
-router.put('/profil/change-password', clientController.changePassword);
-
-// 🔒 Voir ses modules en cours
-router.get('/modules-en-cours', clientController.getModulesEnCours);
-
-// 🔒 Voir les modules disponibles
-router.get('/modules-disponibles', clientController.getModulesClient);
-
-// 🔒 Marquer un module comme complété
-router.post('/modules/completé/:id', clientController.marquerModuleCommeComplete);
-
-// 🔒 Voir les modules complétés
-router.get('/modules/historique', clientController.getHistoriqueModulesClient);
+router.get('/profile', clientController.getCurrentUser);
+router.get('/modules', clientController.getModules);
+router.get('/modules/:id', clientController.getModuleById);
+router.get('/modules/patient/:id', clientController.getModulesByClientId);
+router.get('/rdv', clientController.getRDV);
+router.get('/blocks', clientController.getBlocks);
+router.get('/blocks/:id/contents', clientController.getContenusBlocks);
+router.post('/modules/:id/validate', clientController.validateModule);
+router.post('/logout', AuthController.logout);
 
 module.exports = router;

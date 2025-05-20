@@ -1,10 +1,8 @@
-// File : models/index.js
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const config = require('../config/database');
+const sequelize = require('../config/database'); // ✅ Utilise l'instance directement
 
-const sequelize = new Sequelize(config);
 const db = {};
 
 fs.readdirSync(__dirname)
@@ -14,11 +12,33 @@ fs.readdirSync(__dirname)
     db[model.name] = model;
   });
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
+// Associations
+const { Client, Module, ClientModule, Block, Content, Rdv } = db;
+
+if (Client && ClientModule) {
+  Client.hasMany(ClientModule, { foreignKey: 'patient_id' });
+  ClientModule.belongsTo(Client, { foreignKey: 'patient_id' });
+}
+
+if (Module && ClientModule) {
+  Module.hasMany(ClientModule, { foreignKey: 'module_id' });
+  ClientModule.belongsTo(Module, { foreignKey: 'module_id' });
+}
+
+if (Module && Content) {
+  Module.hasMany(Content, { foreignKey: 'module_id' });
+  Content.belongsTo(Module, { foreignKey: 'module_id' });
+}
+
+if (Block && Content) {
+  Block.hasMany(Content, { foreignKey: 'bloc_id' });
+  Content.belongsTo(Block, { foreignKey: 'bloc_id' });
+}
+
+if (Client && Rdv) {
+  Client.hasMany(Rdv, { foreignKey: 'patient_id' });
+  Rdv.belongsTo(Client, { foreignKey: 'patient_id' });
+}
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

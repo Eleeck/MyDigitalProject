@@ -1,4 +1,4 @@
-// models/TokenBlacklist.js
+// fichier : models/TokenBlacklist.js
 module.exports = (sequelize, DataTypes) => {
   const TokenBlacklist = sequelize.define(
     'TokenBlacklist',
