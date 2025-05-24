@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     emploi_vise: DataTypes.STRING,
     competences: DataTypes.TEXT,
     experience: DataTypes.TEXT,
+    image_profil: DataTypes.STRING,
     notes: DataTypes.TEXT,
   }, {
     tableName: 'utilisateur',

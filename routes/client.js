@@ -10,6 +10,7 @@ router.use(authenticate, authorizeRole('client'));
 
 
 router.get('/profile', clientController.getCurrentUser);
+router.get('/profile/update', clientController.updateProfile);
 router.get('/modules', clientController.getModules);
 router.get('/modules/:id', clientController.getModuleById);
 router.get('/modules/patient/:id', clientController.getModulesByClientId);

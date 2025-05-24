@@ -15,6 +15,31 @@ exports.getCurrentUser = async (req, res) => {
   }
 };
 
+// PUT /client/profile/update
+exports.updateProfile = async (req, res) => {
+  const { nom, prenom, email, telephone, emploi_actuel, emploi_vise, competences, experience, image_profil } = req.body;
+
+  try {
+    const client = await Client.findByPk(req.user.id);
+    if (!client) return res.status(404).json({ message: 'Client introuvable' });
+
+    client.nom = nom || client.nom;
+    client.prenom = prenom || client.prenom;
+    client.email = email || client.email;
+    client.telephone = telephone || client.telephone;
+    client.emploi_actuel = emploi_actuel || client.emploi_actuel;
+    client.emploi_vise = emploi_vise || client.emploi_vise;
+    client.competences = competences || client.competences;
+    client.experience = experience || client.experience;
+    client.image_profil = image_profil || client.image_profil;
+
+    await client.save();
+    res.json({ message: 'Profil mis à jour avec succès', client });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur', error });
+  }
+};
+
 // GET /client/modules
 exports.getModules = async (req, res) => {
   try {
@@ -94,7 +119,7 @@ exports.validateModule = async (req, res) => {
 
     if (!moduleClient) return res.status(404).json({ message: 'Module non attribué à ce client.' });
 
-    moduleClient.estComplete = true;
+    moduleClient.progression = true;
     await moduleClient.save();
 
     res.json({ message: 'Module validé avec succès.' });
