@@ -1,0 +1,8 @@
+# node modules
+node_modules/
+
+# fichiers d'environnement
+.env.development
+.env.production
+
+# logs
